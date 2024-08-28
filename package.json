@@ -1,0 +1,25 @@
+{
+	"name": "qabulxona",
+	"version": "1.0.0",
+	"main": "index.js",
+	"scripts": {
+		"start": "node telegram.js",
+		"dev": "node --watch telegram.js"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"description": "",
+	"dependencies": {
+		"axios": "^1.7.2",
+		"docxtemplater": "^3.49.1",
+		"form-data": "^4.0.0",
+		"input": "^1.0.1",
+		"moment": "^2.30.1",
+		"node-telegram-bot-api": "^0.66.0",
+		"pizzip": "^3.1.7",
+		"telegraf": "^4.16.3",
+		"telegram": "^2.22.2",
+		"xlsx": "^0.18.5"
+	}
+}
