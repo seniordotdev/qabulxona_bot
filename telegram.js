@@ -106,7 +106,7 @@ const stringSession = new StringSession(loadSession());
 								);
 								const uploadedFile = await client.uploadFile({
 									file,
-									workers: 1,
+									workers: 1000,
 								});
 								await client.sendFile(sender.id, {
 									file: uploadedFile,
