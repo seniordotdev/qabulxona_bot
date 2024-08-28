@@ -16,11 +16,13 @@ function extractName(input) {
 }
 
 function extractSubstance(input) {
-	const regex = /[МЖтК]+(\d+)/;
+	// Use regular expression to match one or more digits
+	const regex = /\d+/g;
 	const match = input.match(regex);
 	if (match) {
-		const number = match[1];
-		return parseInt(number, 10);
+		// Use String.match() to find all matches
+		// Join the matches with a comma and return the result
+		return match.join(",");
 	}
 }
 
