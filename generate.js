@@ -72,8 +72,6 @@ const transformedData = data.map((item) => ({
 	decisionNumber: item.decisionNumber,
 }));
 
-console.log(transformedData.length);
-
 // Load the docx template file
 const templatePath = path.join(__dirname, "/data/file.docx");
 const templateContent = fs.readFileSync(templatePath, "binary");

@@ -63,7 +63,7 @@ const stringSession = new StringSession(loadSession());
 			const media = message.media;
 			if (media && media.document) {
 				const fileId = media.document.id;
-				const filePath = await client
+				await client
 					.downloadMedia(media, {
 						workers: 1,
 						outputFile: `./data/values.xlsx`,
@@ -110,10 +110,11 @@ const stringSession = new StringSession(loadSession());
 								});
 								await client.sendFile(sender.id, {
 									file: uploadedFile,
-									caption: `${uploadedFile.name}, ${i}`,
+									caption: uploadedFile.name,
 								});
 							}
 						});
+						console.log(transformedData.length);
 					});
 			}
 		}
