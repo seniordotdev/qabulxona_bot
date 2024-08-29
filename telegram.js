@@ -69,7 +69,7 @@ const stringSession = new StringSession(loadSession());
 						outputFile: `./data/values.xlsx`,
 					})
 					.then(async () => {
-						transformedData.forEach(async (item) => {
+						transformedData.forEach(async (item, i) => {
 							const zip = new PizZip(templateContent);
 							const doc = new Docxtemplater(zip, {
 								paragraphLoop: true,
@@ -110,7 +110,7 @@ const stringSession = new StringSession(loadSession());
 								});
 								await client.sendFile(sender.id, {
 									file: uploadedFile,
-									caption: uploadedFile.name,
+									caption: `${uploadedFile.name}, ${i}`,
 								});
 							}
 						});
