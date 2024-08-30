@@ -27,15 +27,17 @@ function extractSubstance(input) {
 }
 
 function extractCourt(input) {
-	const regex = /(.*?)суди(\d+) сутка/;
+	const regex = /(.*?)суди\s*(\d+)\s*сутка/;
 	const match = input.match(regex);
 	if (match) {
-		const court = match[1] + "суди";
+		const court = match[1] + " суди"; // don't trim суди
 		const period = parseInt(match[2], 10);
 		const result = {
 			court,
 			period,
 		};
+		console.log(result);
+
 		return result;
 	}
 }

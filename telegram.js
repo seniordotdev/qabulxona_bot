@@ -14,15 +14,6 @@ const apiId = 22701361;
 const apiHash = "5d579e2ca05ea7fd05292554eeabdde0";
 const sessionFile = "session.txt";
 
-const server = http.createServer((req, res) => {
-	res.writeHead(200, { "Content-Type": "text/html" });
-	res.end("<h1>Hello World</h1>");
-});
-
-server.listen(3000).on("listening", () => {
-	console.log("Server is listening on port 3000");
-});
-
 const loadSession = () => {
 	if (fs.existsSync(sessionFile)) {
 		return fs.readFileSync(sessionFile, "utf8");
@@ -69,7 +60,7 @@ const stringSession = new StringSession(loadSession());
 						outputFile: `./data/values.xlsx`,
 					})
 					.then(async () => {
-						transformedData.forEach(async (item, i) => {
+						transformedData.map(async (item) => {
 							const zip = new PizZip(templateContent);
 							const doc = new Docxtemplater(zip, {
 								paragraphLoop: true,
@@ -106,7 +97,7 @@ const stringSession = new StringSession(loadSession());
 								);
 								const uploadedFile = await client.uploadFile({
 									file,
-									workers: 100,
+									workers: 10,
 								});
 								await client.sendFile(sender.id, {
 									file: uploadedFile,
@@ -114,7 +105,6 @@ const stringSession = new StringSession(loadSession());
 								});
 							}
 						});
-						console.log(transformedData.length);
 					});
 			}
 		}
