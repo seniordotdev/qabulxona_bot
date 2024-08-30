@@ -1,18 +1,26 @@
 const DATE_CONVERT_PATTERN = /^(\d+)\/(\d+)\/(\d+)$/;
 
-function extractName(input) {
-	const regex = /(.*) (.*) (.*) (.*?)йилда туғилган (.*)/;
-	const match = input.match(regex);
+function extractName(str) {
+	// Regular expression to match the name (all words up to a number)
+	const nameRegex = /^[^\d]+/;
+	const name = str.match(nameRegex)[0].trim();
 
-	if (match) {
-		const [_, lastName, firstName, middleName, borndate, address] = match;
-		const result = {
-			name: `${lastName} ${firstName} ${middleName}`,
-			borndate,
-			address,
-		};
-		return result;
-	}
+	// Regular expression to match the birthdate (numbers)
+	const birthdateRegex = /\d{2}\.\d{2}\.\d{4}/;
+	const birthdate = str.match(birthdateRegex)[0];
+
+	// The rest of the string is the address
+	const address = str
+		.replace(nameRegex, "")
+		.replace(birthdateRegex, "")
+		.replace("йилда туғилган", "")
+		.trim();
+
+	return {
+		name,
+		borndate: birthdate,
+		address,
+	};
 }
 
 function extractSubstance(input) {
@@ -36,7 +44,6 @@ function extractCourt(input) {
 			court,
 			period,
 		};
-		console.log(result);
 
 		return result;
 	}

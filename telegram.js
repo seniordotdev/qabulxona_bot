@@ -53,59 +53,49 @@ const stringSession = new StringSession(loadSession());
 		if (sender.phone == "998995160450" || sender.phone == "998908324608") {
 			const media = message.media;
 			if (media && media.document) {
-				const fileId = media.document.id;
-				await client
-					.downloadMedia(media, {
-						workers: 1,
-						outputFile: `./data/values.xlsx`,
-					})
-					.then(async () => {
-						transformedData.map(async (item) => {
-							const zip = new PizZip(templateContent);
-							const doc = new Docxtemplater(zip, {
-								paragraphLoop: true,
-								linebreaks: true,
-							});
-
-							// Set the data to replace placeholders in the template
-							doc.setData({
-								name: item.name,
-								borndate: item.borndate,
-								address: item.address,
-								substance: item.substance,
-								court: item.court,
-								period: item.period,
-								date: item.date,
-								amount: item.amount,
-								decisionNumber: item.decisionNumber,
-							});
-
-							// Render the document with the actual data
-							doc.render();
-
-							// Generate the document buffer and save it to a new file
-							const buf = doc.getZip().generate({ type: "nodebuffer" });
-							const fileName = `${item.court}_${item.name}.docx`;
-
-							if (!fileName.includes("undefined")) {
-								const buffer = Buffer.from(buf); // replace with your buffer
-								const file = new CustomFile(
-									fileName,
-									buffer.length,
-									"",
-									buffer
-								);
-								const uploadedFile = await client.uploadFile({
-									file,
-									workers: 10,
-								});
-								await client.sendFile(sender.id, {
-									file: uploadedFile,
-									caption: uploadedFile.name,
-								});
-							}
-						});
+				await client.downloadMedia(media, {
+					workers: 1,
+					outputFile: `./data/values.xlsx`,
+				});
+				transformedData.map(async (item, i) => {
+					const zip = new PizZip(templateContent);
+					const doc = new Docxtemplater(zip, {
+						paragraphLoop: true,
+						linebreaks: true,
 					});
+
+					// Set the data to replace placeholders in the template
+					doc.setData({
+						name: item.name,
+						borndate: item.borndate,
+						address: item.address,
+						substance: item.substance,
+						court: item.court,
+						period: item.period,
+						date: item.date,
+						amount: item.amount,
+						decisionNumber: item.decisionNumber,
+					});
+
+					// Render the document with the actual data
+					doc.render();
+
+					// Generate the document buffer and save it to a new file
+					const buf = doc.getZip().generate({ type: "nodebuffer" });
+					const fileName = `${item.court}_${item.name}.docx`;
+
+					const buffer = Buffer.from(buf); // replace with your buffer
+					const file = new CustomFile(fileName, buffer.length, "", buffer);
+					const uploadedFile = await client.uploadFile({
+						file,
+						workers: 10,
+					});
+					await client.sendFile(sender.id, {
+						file: uploadedFile,
+						caption: `${uploadedFile.name} ${i + 1}`,
+					});
+				});
+				console.log(transformedData);
 			}
 		}
 	}, new NewMessage({}));
