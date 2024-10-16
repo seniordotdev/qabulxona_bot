@@ -3,11 +3,13 @@ const DATE_CONVERT_PATTERN = /^(\d+)\/(\d+)\/(\d+)$/;
 function extractName(str) {
 	// Regular expression to match the name (all words up to a number)
 	const nameRegex = /^[^\d]+/;
-	const name = str.match(nameRegex)[0].trim();
+	const nameMatch = str.match(nameRegex);
+	const name = nameMatch ? nameMatch[0].trim() : null;
 
 	// Regular expression to match the birthdate (numbers)
 	const birthdateRegex = /\d{2}\.\d{2}\.\d{4}/;
-	const birthdate = str.match(birthdateRegex)[0];
+	const birthdateMatch = str.match(birthdateRegex);
+	const birthdate = birthdateMatch ? birthdateMatch[0] : null;
 
 	// The rest of the string is the address
 	const address = str

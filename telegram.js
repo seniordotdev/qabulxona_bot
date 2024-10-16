@@ -9,6 +9,7 @@ const http = require("http");
 const Docxtemplater = require("docxtemplater");
 const PizZip = require("pizzip");
 const { CustomFile } = require("telegram/client/uploads");
+const { extractName } = require("./convert");
 
 const apiId = 22701361;
 const apiHash = "5d579e2ca05ea7fd05292554eeabdde0";
@@ -93,21 +94,27 @@ const stringSession = new StringSession(loadSession());
 							// Generate the document buffer and save it to a new file
 							const buf = doc.getZip().generate({ type: "nodebuffer" });
 							const fileName = `${item.court}_${item.name}.docx`;
-
-							const buffer = Buffer.from(buf); // replace with your buffer
-							const file = new CustomFile(fileName, buffer.length, "", buffer);
-							const uploadedFile = await client.uploadFile({
-								file,
-								workers: 10,
-							});
-							await client.sendFile(sender.id, {
-								file: uploadedFile,
-								caption: `${uploadedFile.name} 
+							if (!fileName.includes("undefined")) {
+								const buffer = Buffer.from(buf); // replace with your buffer
+								const file = new CustomFile(
+									fileName,
+									buffer.length,
+									"",
+									buffer
+								);
+								const uploadedFile = await client.uploadFile({
+									file,
+									workers: 10,
+								});
+								await client.sendFile(sender.id, {
+									file: uploadedFile,
+									caption: `${uploadedFile.name} 
 								Raqami-${i + 1}.`,
-							});
+								});
+							}
 						});
 						await client.sendMessage(sender.id, {
-							message: `${transformedData.length} ta fayl yuborildi`,
+							message: `${transformedData.length} ta fayl yuborilmoqda`,
 						});
 						console.log(transformedData);
 					});
