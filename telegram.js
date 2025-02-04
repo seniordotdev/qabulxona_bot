@@ -67,7 +67,7 @@ const stringSession = new StringSession(loadSession());
 						outputFile: `./data/values.xlsx`,
 					})
 					.then(async () => {
-						const { transformedData, templateContent } = generateData();
+						const { transformedData, templateContent } = await generateData();
 						transformedData.map(async (item, i) => {
 							const zip = new PizZip(templateContent);
 							const doc = new Docxtemplater(zip, {
@@ -94,29 +94,46 @@ const stringSession = new StringSession(loadSession());
 							// Generate the document buffer and save it to a new file
 							const buf = doc.getZip().generate({ type: "nodebuffer" });
 							const fileName = `${item.court}_${item.name}.docx`;
-							if (!fileName.includes("undefined")) {
-								const buffer = Buffer.from(buf); // replace with your buffer
-								const file = new CustomFile(
-									fileName,
-									buffer.length,
-									"",
-									buffer
-								);
-								const uploadedFile = await client.uploadFile({
-									file,
-									workers: 10,
-								});
-								await client.sendFile(sender.id, {
-									file: uploadedFile,
-									caption: `${uploadedFile.name} 
+
+							const buffer = Buffer.from(buf); // replace with your buffer
+
+							const file = new CustomFile(fileName, buffer.length, "", buffer);
+
+							const uploadedFile = await client.uploadFile({
+								file,
+								workers: 10,
+							});
+
+							await client.sendFile(sender.id, {
+								file: uploadedFile,
+								caption: `${uploadedFile.name}
 								Raqami-${i + 1}.`,
-								});
-							}
+							});
+
+							// // Generate the document buffer and save it to a new file
+							// const buf = doc.getZip().generate({ type: "nodebuffer" });
+
+							// // Define output folder path and ensure it exists
+							// const outputFolder = path.resolve(__dirname, "output");
+							// if (!fs.existsSync(outputFolder)) {
+							// 	fs.mkdirSync(outputFolder, { recursive: true });
+							// }
+
+							// // Define the file name
+							// const fileName = `${item.court}_${item.name}.docx`;
+							// const outputFilePath = path.join(outputFolder, fileName);
+
+							// // Save the file in the output directory
+							// fs.writeFileSync(outputFilePath, buf);
+							// console.log(`File saved to: ${outputFilePath}`);
+							// await client.sendFile(sender.id, {
+							// 	file: outputFilePath,
+							// 	caption: `${item.court}_${item.name} - File ${i + 1}`,
+							// });
 						});
 						await client.sendMessage(sender.id, {
 							message: `${transformedData.length} ta fayl yuborilmoqda`,
 						});
-						console.log(transformedData);
 					});
 			}
 		}
